@@ -1,25 +1,53 @@
-import logo from './logo.svg';
+import React, {useState} from 'react';
+import TaskStyle from './components/TaskStyle';
+import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+      const [newTask, setNewTask] = useState("");
+      const [tasks, setTasks] = useState([]);
+    
+      const onSubmitHandler = (event) => {
+        event.preventDefault();
+        
+        const addedTask = {
+          text : newTask,
+          isDone : false,
+        }
+        setTasks([...tasks, addedTask])
+      }
+
+      const onDeleteHandler = (index) => {
+        const filteredTasks = tasks.filter((task, i) => i !== index)
+        console.log(filteredTasks)
+        setTasks(filteredTasks)
+      }
+
+      const onCheckedHandler = (i) => {
+        let newObject = {...tasks[i]}
+        newObject.isDone = !newObject.isDone
+
+        setTasks([...tasks.slice(0, i), newObject].concat(tasks.slice(i+1)))
+      }
+
+      return(
+          <div className="App">
+              <form onSubmit={onSubmitHandler}>
+                  <input onChange={(e) => {setNewTask(e.target.value)}} type="text" placeholder="add new task"/>
+                  <input type="submit" value="Add"/>
+              </form>
+              <ul style={{listStyle:'none'}}>
+                  {
+                      tasks.map((str, i) => {
+                        return <li key={i}><TaskStyle strike={tasks.strike} text={str.text}/>
+                        <button onClick={() => onDeleteHandler(i)}>Delete</button>
+                        <input type="checkbox" checked={i.isDone} onChange={() => onCheckedHandler(i)}></input>
+                        </li>
+                      })
+                  }
+              </ul>
+          </div>
+      );
 }
 
 export default App;
