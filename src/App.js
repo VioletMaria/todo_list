@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import TaskStyle from './components/TaskStyle';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
@@ -30,6 +29,14 @@ function App() {
         setTasks([...tasks.slice(0, i), newObject].concat(tasks.slice(i+1)))
       }
 
+      const uncheckedTask = {
+        textDecoration:"none"
+      }
+
+      const checkedTask = {
+        textDecoration: "line-through"
+      }
+
       return(
           <div className="App">
               <form onSubmit={onSubmitHandler}>
@@ -39,7 +46,7 @@ function App() {
               <ul style={{listStyle:'none'}}>
                   {
                       tasks.map((str, i) => {
-                        return <li key={i}><TaskStyle strike={tasks.strike} text={str.text}/>
+                        return <li key={i}><span style={str.isDone? checkedTask: uncheckedTask}>{str.text}</span>
                         <button onClick={() => onDeleteHandler(i)}>Delete</button>
                         <input type="checkbox" checked={i.isDone} onChange={() => onCheckedHandler(i)}></input>
                         </li>
